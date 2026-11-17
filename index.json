@@ -1,0 +1,28 @@
+{
+  "apps": [
+    {
+      "category": "multimedia",
+      "compose_path": "apps/jellyfin/docker-compose.yml",
+      "compose_sha256": "7fc06de8cb47587a85770677aff8611554bf29ef0445e14435c8407cd4627a39",
+      "firewall_ports": [
+        {
+          "port": 8096,
+          "protocol": "tcp"
+        }
+      ],
+      "icon": "icon.png",
+      "icon_path": "apps/jellyfin/icon.png",
+      "icon_sha256": "ef6c5bfb9caa4a10abb3bea91e3ac28f98a8936a3b1b6574b3c5e095c10131b5",
+      "id": "jellyfin",
+      "min_ram_mb": 1024,
+      "tagline": "Server media open-source pentru filme, seriale și muzică.",
+      "title": "Jellyfin",
+      "version": "1.0.0",
+      "web_port": 8096
+    }
+  ],
+  "generated_at": "2026-11-17T19:17:35+02:00",
+  "repository": "ioanm9386-art/SSH-Server-AppStore",
+  "revision": "00a3a15a20763af4ed8f9c394cec4a42491a7993",
+  "schema_version": 1
+}
