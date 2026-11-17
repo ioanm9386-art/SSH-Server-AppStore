@@ -1,0 +1,45 @@
+name: Generate SSH Server catalog
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'apps/**'
+      - 'generate_index.py'
+      - 'requirements.txt'
+      - '.github/workflows/generate-index.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: catalog-index-${{ github.ref }}
+  cancel-in-progress: false
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          ref: ${{ github.ref_name }}
+          fetch-depth: 0
+      - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6
+        with:
+          python-version: '3.12'
+      - name: Install parser
+        run: python -m pip install --disable-pip-version-check -r requirements.txt
+      - name: Validate and generate pinned index
+        env:
+          GITHUB_REPOSITORY: ${{ github.repository }}
+        run: |
+          revision="$(git rev-parse HEAD)"
+          python generate_index.py --revision "$revision"
+      - name: Commit index only when changed
+        run: |
+          if git diff --quiet -- index.json && git ls-files --error-unmatch index.json >/dev/null 2>&1; then
+            exit 0
+          fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -- index.json
+          git commit -m 'chore: regenerate application index [skip ci]'
+          git push origin "HEAD:${GITHUB_REF_NAME}"
