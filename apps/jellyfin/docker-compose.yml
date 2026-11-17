@@ -1,0 +1,31 @@
+services:
+  jellyfin:
+    image: jellyfin/jellyfin:10.11.0
+    restart: unless-stopped
+    ports:
+      - target: 8096
+        published: "8096"
+        protocol: tcp
+        host_ip: 0.0.0.0
+    volumes:
+      - type: volume
+        source: jellyfin-config
+        target: /config
+      - type: volume
+        source: jellyfin-cache
+        target: /cache
+    # Media mounts can be added locally after installation; updates preserve them.
+volumes:
+  jellyfin-config: {}
+  jellyfin-cache: {}
+x-sshserver:
+  title: Jellyfin
+  version: 1.0.0  # Packaging version; bump on every recipe change.
+  category: multimedia
+  tagline: Server media open-source pentru filme, seriale și muzică.
+  icon: icon.png
+  web_port: 8096
+  min_ram_mb: 1024
+  firewall_ports:
+    - port: 8096
+      protocol: tcp
